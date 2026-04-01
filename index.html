@@ -816,9 +816,9 @@
             <div class="sub">PTR / MRP</div>
           </div>
           <div class="kpi">
-            <div class="label">Retailer Margin % on PTR</div>
-            <div class="value" id="kpiMarginOnPTR">0%</div>
-            <div class="sub">Return on PTR</div>
+            <div class="label">Margin % on MRP</div>
+            <div class="value" id="kpiMarginOnMRP">0%</div>
+            <div class="sub">Return on MRP</div>
           </div>
         </div>
 
@@ -838,20 +838,20 @@
             <div id="scatterChart" class="chart"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Brand Avg Margin % on PTR</div>
-            <div id="brandMarginPTRChart" class="chart"></div>
+            <div class="chart-title">Brand Avg Margin % on MRP</div>
+            <div id="brandMarginMRPChart" class="chart"></div>
           </div>
           <div class="chart-card">
             <div class="chart-title">Channel Split</div>
             <div id="channelChart" class="chart"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Region Avg Margin % on PTR</div>
-            <div id="regionMarginPTRChart" class="chart"></div>
+            <div class="chart-title">Region Avg Margin % on MRP</div>
+            <div id="regionMarginMRPChart" class="chart"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Top SKUs by Margin % on PTR</div>
-            <div id="skuMarginPTRChart" class="chart"></div>
+            <div class="chart-title">Top SKUs by Margin % on MRP</div>
+            <div id="skuMarginMRPChart" class="chart"></div>
           </div>
         </div>
 
@@ -1131,16 +1131,16 @@
       const avgPTR = ptrs.length ? ptrs.reduce((a,b) => a+b, 0) / ptrs.length : 0;
       const ptrPct = avgMRP ? (avgPTR / avgMRP) * 100 : 0;
 
-      const marginPTRs = data
-        .map(d => getMarginOnPTRPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
+      const marginMRPs = data
+        .map(d => getMarginOnMRPPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
         .filter(v => isFinite(v));
 
-      const avgMarginOnPTR = marginPTRs.length ? marginPTRs.reduce((a,b) => a+b, 0) / marginPTRs.length : 0;
+      const avgMarginOnMRP = marginMRPs.length ? marginMRPs.reduce((a,b) => a+b, 0) / marginMRPs.length : 0;
 
       document.getElementById("kpiRecords").textContent = totalRecords;
       document.getElementById("kpiShops").textContent = uniqueShops;
       document.getElementById("kpiPTRPct").textContent = formatPct(ptrPct);
-      document.getElementById("kpiMarginOnPTR").textContent = formatPct(avgMarginOnPTR);
+      document.getElementById("kpiMarginOnMRP").textContent = formatPct(avgMarginOnMRP);
     }
 
     function getMarginHeatColor(value, min, max) {
@@ -1283,7 +1283,7 @@
         text: data.map(d => {
           const mrp = toNumber(d[fields.mrp]);
           const ptr = toNumber(d[fields.ptr]);
-          return `${safeText(d[fields.shop])}<br>${safeText(d[fields.brand])}<br>${safeText(d[fields.sku])}<br>Margin on PTR: ${formatPct(getMarginOnPTRPct(mrp, ptr))}`;
+          return `${safeText(d[fields.shop])}<br>${safeText(d[fields.brand])}<br>${safeText(d[fields.sku])}<br>Margin on MRP: ${formatPct(getMarginOnMRPPct(mrp, ptr))}`;
         }),
         marker: {
           size: 11,
@@ -1311,11 +1311,11 @@
       }, { responsive: true, displayModeBar: false });
     }
 
-    function renderBrandMarginPTRChart(data) {
-      const agg = aggregateBy(data, fields.brand, d => getMarginOnPTRPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
+    function renderBrandMarginMRPChart(data) {
+      const agg = aggregateBy(data, fields.brand, d => getMarginOnMRPPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
         .sort((a,b) => b.value - a.value);
 
-      Plotly.newPlot("brandMarginPTRChart", [{
+      Plotly.newPlot("brandMarginMRPChart", [{
         x: agg.map(d => d.key),
         y: agg.map(d => d.value),
         type: "bar",
@@ -1323,7 +1323,7 @@
           color: "rgba(99,102,241,0.85)",
           line: { color: "rgba(59,130,246,1)", width: 1.2 }
         },
-        hovertemplate: "%{x}<br>Avg Margin on PTR: %{y:.1f}%<extra></extra>"
+        hovertemplate: "%{x}<br>Avg Margin on MRP: %{y:.1f}%<extra></extra>"
       }], {
         ...getChartLayout(),
         margin: { l: 48, r: 12, t: 18, b: 90 },
@@ -1331,7 +1331,7 @@
           tickangle: -25,
           gridcolor: "rgba(99,102,241,0.08)"
         },
-        yaxis: { title: "Margin % on PTR", gridcolor: "rgba(99,102,241,0.10)" }
+        yaxis: { title: "Margin % on MRP", gridcolor: "rgba(99,102,241,0.10)" }
       }, { responsive: true, displayModeBar: false });
     }
 
@@ -1370,11 +1370,11 @@
       }, { responsive: true, displayModeBar: false });
     }
 
-    function renderRegionMarginPTRChart(data) {
-      const agg = aggregateBy(data, fields.region, d => getMarginOnPTRPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
+    function renderRegionMarginMRPChart(data) {
+      const agg = aggregateBy(data, fields.region, d => getMarginOnMRPPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
         .sort((a,b) => b.value - a.value);
 
-      Plotly.newPlot("regionMarginPTRChart", [{
+      Plotly.newPlot("regionMarginMRPChart", [{
         x: agg.map(d => d.key),
         y: agg.map(d => d.value),
         type: "bar",
@@ -1382,20 +1382,20 @@
           color: "rgba(168,85,247,0.82)",
           line: { color: "rgba(99,102,241,1)", width: 1.2 }
         },
-        hovertemplate: "%{x}<br>Avg Margin on PTR: %{y:.1f}%<extra></extra>"
+        hovertemplate: "%{x}<br>Avg Margin on MRP: %{y:.1f}%<extra></extra>"
       }], {
         ...getChartLayout(),
         margin: { l: 48, r: 12, t: 18, b: 45 },
-        yaxis: { title: "Margin % on PTR", gridcolor: "rgba(99,102,241,0.10)" }
+        yaxis: { title: "Margin % on MRP", gridcolor: "rgba(99,102,241,0.10)" }
       }, { responsive: true, displayModeBar: false });
     }
 
-    function renderSkuMarginPTRChart(data) {
-      const agg = aggregateBy(data, fields.sku, d => getMarginOnPTRPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
+    function renderSkuMarginMRPChart(data) {
+      const agg = aggregateBy(data, fields.sku, d => getMarginOnMRPPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
         .sort((a,b) => b.value - a.value)
         .slice(0, 8);
 
-      Plotly.newPlot("skuMarginPTRChart", [{
+      Plotly.newPlot("skuMarginMRPChart", [{
         x: agg.map(d => d.value),
         y: agg.map(d => d.key),
         type: "bar",
@@ -1404,7 +1404,7 @@
           color: "rgba(14,165,233,0.82)",
           line: { color: "rgba(37,99,235,1)", width: 1.2 }
         },
-        hovertemplate: "%{y}<br>Avg Margin on PTR: %{x:.1f}%<extra></extra>"
+        hovertemplate: "%{y}<br>Avg Margin on MRP: %{x:.1f}%<extra></extra>"
       }], {
         ...getChartLayout(),
         margin: { l: 120, r: 12, t: 18, b: 35 },
@@ -1412,7 +1412,7 @@
           autorange: "reversed",
           gridcolor: "rgba(99,102,241,0.08)"
         },
-        xaxis: { title: "Margin % on PTR", gridcolor: "rgba(99,102,241,0.10)" }
+        xaxis: { title: "Margin % on MRP", gridcolor: "rgba(99,102,241,0.10)" }
       }, { responsive: true, displayModeBar: false });
     }
 
@@ -1543,10 +1543,10 @@
       renderPTRSummary(data);
       renderObservationSection(data);
       renderScatterChart(data);
-      renderBrandMarginPTRChart(data);
+      renderBrandMarginMRPChart(data);
       renderChannelChart(data);
-      renderRegionMarginPTRChart(data);
-      renderSkuMarginPTRChart(data);
+      renderRegionMarginMRPChart(data);
+      renderSkuMarginMRPChart(data);
       renderTable(data);
       renderGallery(data);
 
