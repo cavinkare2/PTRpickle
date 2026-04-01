@@ -339,14 +339,14 @@
 
     .ptr-table th:nth-child(5),
     .ptr-table td:nth-child(5) {
-      width: 38px;
+      width: 62px;
     }
 
     .margin-cell {
       display: inline-block;
-      width: 36px;
-      min-width: 36px;
-      max-width: 36px;
+      width: 56px;
+      min-width: 56px;
+      max-width: 56px;
       font-weight: 800;
       border-radius: 3px;
       text-align: center;
@@ -1175,7 +1175,7 @@
         const ptr = toNumber(d[fields.ptr]);
         const brand = safeText(d[fields.brand]) || "NA";
         const channel = safeText(d[fields.channel]) || "NA";
-        const marginPTR = getMarginOnPTRPct(mrp, ptr);
+        const marginMRP = getMarginOnMRPPct(mrp, ptr);
 
         if (!ptr && !mrp) return;
 
@@ -1186,11 +1186,11 @@
           ptr,
           brand,
           channel,
-          marginPTR
+          marginMRP
         });
       });
 
-      const allMargins = Object.values(skuMap).flat().map(x => x.marginPTR).filter(v => isFinite(v));
+      const allMargins = Object.values(skuMap).flat().map(x => x.marginMRP).filter(v => isFinite(v));
       const minMargin = allMargins.length ? Math.min(...allMargins) : 0;
       const maxMargin = allMargins.length ? Math.max(...allMargins) : 0;
 
@@ -1198,10 +1198,10 @@
 
       container.innerHTML = sortedSkuKeys.map(sku => {
         const entries = skuMap[sku]
-          .sort((a, b) => a.marginPTR - b.marginPTR || a.ptr - b.ptr || a.mrp - b.mrp);
+          .sort((a, b) => a.marginMRP - b.marginMRP || a.ptr - b.ptr || a.mrp - b.mrp);
 
         const rows = entries.map(item => {
-          const heatStyle = getMarginHeatColor(item.marginPTR, minMargin, maxMargin);
+          const heatStyle = getMarginHeatColor(item.marginMRP, minMargin, maxMargin);
           return `
             <tr>
               <td>${formatCompactNumber(item.mrp)}</td>
@@ -1210,7 +1210,7 @@
               <td title="${item.channel}">${item.channel}</td>
               <td>
                 <div class="margin-cell" style="${heatStyle}">
-                  ${formatPctTwo(item.marginPTR)}
+                  ${formatPctTwo(item.marginMRP)}
                 </div>
               </td>
             </tr>
@@ -1228,7 +1228,7 @@
                     <th>PTR</th>
                     <th>Brand</th>
                     <th>Channel</th>
-                    <th>Margin %</th>
+                    <th>Margin % on MRP</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1504,7 +1504,7 @@
                 <div class="meta-item"><i class="fas fa-tag"></i><span><strong>MRP:</strong> ${formatCurrency(mrp)}</span></div>
                 <div class="meta-item"><i class="fas fa-money-bill-wave"></i><span><strong>PTR:</strong> ${formatCurrency(ptr)}</span></div>
                 <div class="meta-item"><i class="fas fa-percent"></i><span><strong>PTR %:</strong> ${formatPct(getPTRPct(mrp, ptr))}</span></div>
-                <div class="meta-item"><i class="fas fa-chart-pie"></i><span><strong>Margin %:</strong> ${formatPct(getMarginOnMRPPct(mrp, ptr))}</span></div>
+                <div class="meta-item"><i class="fas fa-chart-pie"></i><span><strong>Margin % on MRP:</strong> ${formatPct(getMarginOnMRPPct(mrp, ptr))}</span></div>
                 <div class="meta-item"><i class="fas fa-sack-dollar"></i><span><strong>Retailer Margin % on PTR:</strong> ${formatPct(getMarginOnPTRPct(mrp, ptr))}</span></div>
                 <div class="meta-item"><i class="fas fa-gift"></i><span><strong>Scheme:</strong> ${scheme}</span></div>
                 <div class="meta-item"><i class="fas fa-file-invoice"></i><span><strong>Bill:</strong> ${billWilling}</span></div>
