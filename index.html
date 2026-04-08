@@ -349,6 +349,7 @@
       font-size: 0.58rem;
       line-height: 1;
       overflow: hidden;
+      color: #111827 !important;
     }
 
     .charts-grid {
@@ -811,6 +812,10 @@
             <div class="chart-title">Top SKUs by Margin % on MRP</div>
             <div id="skuMarginMRPChart" class="chart"></div>
           </div>
+          <div class="chart-card">
+            <div class="chart-title">Top Flavors by Margin % on MRP</div>
+            <div id="flavorMarginMRPChart" class="chart"></div>
+          </div>
         </div>
 
         <div class="table-card" style="margin-bottom:12px;">
@@ -1110,9 +1115,7 @@
       const blue = Math.round(235 - (160 * ratio));
       const alpha = 0.25 + (ratio * 0.45);
 
-      const textColor = ratio > 0.55 ? "#ffffff" : "#111827";
-
-      return `background: rgba(${red}, ${green}, ${blue}, ${alpha}); color:${textColor};`;
+      return `background: rgba(${red}, ${green}, ${blue}, ${alpha}); color:#111827;`;
     }
 
     function renderPTRSummary(data) {
@@ -1353,6 +1356,36 @@
       }, { responsive: true, displayModeBar: false });
     }
 
+    function renderFlavorMarginMRPChart(data) {
+      const agg = aggregateBy(
+        data.filter(d => safeText(d[fields.flavor]) !== ""),
+        fields.flavor,
+        d => getMarginOnMRPPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr]))
+      )
+        .sort((a,b) => b.value - a.value)
+        .slice(0, 8);
+
+      Plotly.newPlot("flavorMarginMRPChart", [{
+        x: agg.map(d => d.value),
+        y: agg.map(d => d.key),
+        type: "bar",
+        orientation: "h",
+        marker: {
+          color: "rgba(244,114,182,0.82)",
+          line: { color: "rgba(192,38,211,1)", width: 1.2 }
+        },
+        hovertemplate: "%{y}<br>Avg Margin on MRP: %{x:.1f}%<extra></extra>"
+      }], {
+        ...getChartLayout(),
+        margin: { l: 120, r: 12, t: 18, b: 35 },
+        yaxis: {
+          autorange: "reversed",
+          gridcolor: "rgba(99,102,241,0.08)"
+        },
+        xaxis: { title: "Margin % on MRP", gridcolor: "rgba(99,102,241,0.10)" }
+      }, { responsive: true, displayModeBar: false });
+    }
+
     function renderTable(data) {
       const tbody = document.querySelector("#dataTable tbody");
       tbody.innerHTML = data.map(d => {
@@ -1485,6 +1518,7 @@
       renderChannelChart(data);
       renderRegionMarginMRPChart(data);
       renderSkuMarginMRPChart(data);
+      renderFlavorMarginMRPChart(data);
       renderTable(data);
       renderGallery(data);
 
