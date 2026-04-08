@@ -136,7 +136,7 @@
 
     .kpis {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       margin-bottom: 12px;
     }
@@ -191,8 +191,7 @@
     .summary-card,
     .chart-card,
     .table-card,
-    .gallery-card,
-    .observation-card {
+    .gallery-card {
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,251,255,0.98));
       border: 1px solid #e5e7eb;
       border-radius: 14px;
@@ -203,10 +202,6 @@
     }
 
     .summary-card {
-      margin-bottom: 12px;
-    }
-
-    .observation-card {
       margin-bottom: 12px;
     }
 
@@ -354,33 +349,6 @@
       font-size: 0.58rem;
       line-height: 1;
       overflow: hidden;
-    }
-
-    .observation-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 10px;
-    }
-
-    .observation-item {
-      background: linear-gradient(180deg, #ffffff, #f8fbff);
-      border: 1px solid #e5e7eb;
-      border-left: 4px solid #6366f1;
-      border-radius: 12px;
-      padding: 12px;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.06);
-      min-height: 80px;
-      white-space: normal;
-      word-break: break-word;
-      line-height: 1.5;
-      font-size: 0.84rem;
-      color: #374151;
-    }
-
-    .observation-empty {
-      color: #6b7280;
-      font-size: 0.84rem;
-      padding: 8px 2px;
     }
 
     .charts-grid {
@@ -806,11 +774,6 @@
             <div class="sub">Filtered rows</div>
           </div>
           <div class="kpi">
-            <div class="label">Unique Shops</div>
-            <div class="value" id="kpiShops">0</div>
-            <div class="sub">Distinct outlets</div>
-          </div>
-          <div class="kpi">
             <div class="label">PTR % of MRP</div>
             <div class="value" id="kpiPTRPct">0%</div>
             <div class="sub">PTR / MRP</div>
@@ -825,11 +788,6 @@
         <div class="summary-card">
           <div class="section-title">Unique PTR Values by SKU</div>
           <div id="ptrSummaryGrid" class="ptr-summary-grid"></div>
-        </div>
-
-        <div class="observation-card">
-          <div class="section-title">Observation</div>
-          <div id="observationList" class="observation-list"></div>
         </div>
 
         <div class="charts-grid">
@@ -914,13 +872,13 @@
       city: "City",
       brand: "Brand / Player",
       sku: "SKU",
+      flavor: "Flavor",
       channel: "Channel",
       shop: "Shop Name",
       mrp: "MRP",
       ptr: "PTR",
       scheme: "Any Scheme (Optional)",
       remarks: "Remarks (Optional)",
-      observation: "Observation",
       frontPhoto: "Front Photo Link",
       batchPhoto: "Batch Photo Link",
       timestamp: "Timestamp",
@@ -1123,7 +1081,6 @@
 
     function renderKPIs(data) {
       const totalRecords = data.length;
-      const uniqueShops = new Set(data.map(d => safeText(d[fields.shop]))).size;
       const mrps = data.map(d => toNumber(d[fields.mrp])).filter(v => v > 0);
       const ptrs = data.map(d => toNumber(d[fields.ptr])).filter(v => v > 0);
 
@@ -1138,7 +1095,6 @@
       const avgMarginOnMRP = marginMRPs.length ? marginMRPs.reduce((a,b) => a+b, 0) / marginMRPs.length : 0;
 
       document.getElementById("kpiRecords").textContent = totalRecords;
-      document.getElementById("kpiShops").textContent = uniqueShops;
       document.getElementById("kpiPTRPct").textContent = formatPct(ptrPct);
       document.getElementById("kpiMarginOnMRP").textContent = formatPct(avgMarginOnMRP);
     }
@@ -1239,25 +1195,6 @@
           </div>
         `;
       }).join("");
-    }
-
-    function renderObservationSection(data) {
-      const container = document.getElementById("observationList");
-
-      const observations = data
-        .map(d => safeText(d[fields.observation]))
-        .filter(v => v !== "");
-
-      if (!observations.length) {
-        container.innerHTML = `<div class="observation-empty">No observations available</div>`;
-        return;
-      }
-
-      container.innerHTML = observations.map((obs, index) => `
-        <div class="observation-item">
-          <strong>Point ${index + 1}:</strong> ${obs}
-        </div>
-      `).join("");
     }
 
     function aggregateBy(data, keyField, valueFn) {
@@ -1479,6 +1416,7 @@
         const city = safeText(d[fields.city]);
         const brand = safeText(d[fields.brand]);
         const sku = safeText(d[fields.sku]);
+        const flavor = safeText(d[fields.flavor]);
         const channel = safeText(d[fields.channel]);
         const scheme = safeText(d[fields.scheme]) || "No";
         const remarks = safeText(d[fields.remarks]) || "No remarks";
@@ -1500,6 +1438,7 @@
                 <div class="meta-item"><i class="fas fa-city"></i><span><strong>City:</strong> ${city || "-"}</span></div>
                 <div class="meta-item"><i class="fas fa-copyright"></i><span><strong>Brand:</strong> ${brand || "-"}</span></div>
                 <div class="meta-item"><i class="fas fa-box"></i><span><strong>SKU:</strong> ${sku || "-"}</span></div>
+                <div class="meta-item"><i class="fas fa-pepper-hot"></i><span><strong>Flavor:</strong> ${flavor || "-"}</span></div>
                 <div class="meta-item"><i class="fas fa-store"></i><span><strong>Channel:</strong> ${channel || "-"}</span></div>
                 <div class="meta-item"><i class="fas fa-tag"></i><span><strong>MRP:</strong> ${formatCurrency(mrp)}</span></div>
                 <div class="meta-item"><i class="fas fa-money-bill-wave"></i><span><strong>PTR:</strong> ${formatCurrency(ptr)}</span></div>
@@ -1541,7 +1480,6 @@
     function renderDashboard(data) {
       renderKPIs(data);
       renderPTRSummary(data);
-      renderObservationSection(data);
       renderScatterChart(data);
       renderBrandMarginMRPChart(data);
       renderChannelChart(data);
