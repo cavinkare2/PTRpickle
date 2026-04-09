@@ -243,17 +243,58 @@
       z-index: 1;
     }
 
-    .ptr-summary-grid {
+    .view-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .view-btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #334155;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      box-shadow: 0 2px 7px rgba(0,0,0,0.04);
+    }
+
+    .view-btn:hover {
+      background: #eef2ff;
+      border-color: #818cf8;
+    }
+
+    .view-btn.active {
+      background: linear-gradient(135deg, #4f46e5, #2563eb);
+      color: white;
+      border-color: transparent;
+      box-shadow:
+        0 0 0 2px rgba(99, 102, 241, 0.10),
+        0 0 18px rgba(79, 70, 229, 0.35);
+    }
+
+    .ptr-summary-grid.single-view {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 6px;
       align-items: start;
     }
 
+    .ptr-summary-grid.batch-view {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
     .ptr-box {
       border: 1px solid #e5e7eb;
       border-radius: 8px;
-      padding: 5px;
+      padding: 6px;
       background: linear-gradient(180deg, #f8fbff, #f2f7ff);
       box-shadow:
         0 3px 10px rgba(59, 130, 246, 0.05),
@@ -261,13 +302,24 @@
       min-width: 0;
     }
 
+    .ptr-summary-grid.batch-view .ptr-box {
+      border-radius: 10px;
+      padding: 10px;
+    }
+
     .ptr-box .ptr-head {
-      font-size: 0.78rem;
+      font-size: 0.82rem;
       font-weight: 800;
       color: #1d4ed8;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
       word-break: break-word;
-      line-height: 1.1;
+      line-height: 1.15;
+    }
+
+    .ptr-summary-grid.batch-view .ptr-box .ptr-head {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      line-height: 1.2;
     }
 
     .ptr-table-wrap {
@@ -285,6 +337,12 @@
       table-layout: fixed;
     }
 
+    .ptr-summary-grid.batch-view .ptr-table {
+      font-size: 0.76rem;
+      min-width: 900px;
+      table-layout: auto;
+    }
+
     .ptr-table th {
       background: #e9efff;
       color: #312e81;
@@ -294,6 +352,12 @@
       font-weight: 800;
       white-space: nowrap;
       line-height: 1.05;
+    }
+
+    .ptr-summary-grid.batch-view .ptr-table th {
+      padding: 7px 6px;
+      border-right: 1px solid #dbeafe;
+      line-height: 1.15;
     }
 
     .ptr-table td {
@@ -308,33 +372,45 @@
       text-overflow: ellipsis;
     }
 
+    .ptr-summary-grid.batch-view .ptr-table td {
+      padding: 7px 6px;
+      border-right: 1px solid #eef2ff;
+      line-height: 1.15;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
     .ptr-table tbody tr:hover {
       background: #f8fbff;
     }
 
-    .ptr-table th:nth-child(1),
-    .ptr-table td:nth-child(1) {
+    .ptr-summary-grid.single-view .ptr-table th:nth-child(1),
+    .ptr-summary-grid.single-view .ptr-table td:nth-child(1) {
       width: 34px;
     }
 
-    .ptr-table th:nth-child(2),
-    .ptr-table td:nth-child(2) {
+    .ptr-summary-grid.single-view .ptr-table th:nth-child(2),
+    .ptr-summary-grid.single-view .ptr-table td:nth-child(2) {
       width: 34px;
     }
 
-    .ptr-table th:nth-child(3),
-    .ptr-table td:nth-child(3) {
+    .ptr-summary-grid.single-view .ptr-table th:nth-child(3),
+    .ptr-summary-grid.single-view .ptr-table td:nth-child(3) {
       width: 52px;
     }
 
-    .ptr-table th:nth-child(4),
-    .ptr-table td:nth-child(4) {
+    .ptr-summary-grid.single-view .ptr-table th:nth-child(4),
+    .ptr-summary-grid.single-view .ptr-table td:nth-child(4) {
       width: 42px;
     }
 
-    .ptr-table th:nth-child(5),
-    .ptr-table td:nth-child(5) {
+    .ptr-summary-grid.single-view .ptr-table th:nth-child(5),
+    .ptr-summary-grid.single-view .ptr-table td:nth-child(5) {
       width: 62px;
+    }
+
+    .ptr-summary-grid.batch-view .ptr-table th[rowspan="2"] {
+      vertical-align: middle;
     }
 
     .margin-cell {
@@ -350,6 +426,17 @@
       line-height: 1;
       overflow: hidden;
       color: #111827 !important;
+    }
+
+    .ptr-summary-grid.batch-view .margin-cell {
+      width: auto;
+      min-width: 72px;
+      max-width: none;
+      border-radius: 4px;
+      padding: 4px 6px !important;
+      font-size: 0.72rem;
+      line-height: 1.1;
+      overflow: visible;
     }
 
     .charts-grid {
@@ -678,7 +765,7 @@
         grid-template-columns: 1fr 1fr;
       }
 
-      .ptr-summary-grid {
+      .ptr-summary-grid.single-view {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
@@ -710,7 +797,8 @@
       .charts-grid,
       .outlet-metadata,
       .outlet-right,
-      .ptr-summary-grid {
+      .ptr-summary-grid.single-view,
+      .ptr-summary-grid.batch-view {
         grid-template-columns: 1fr;
       }
 
@@ -726,8 +814,12 @@
         left: calc(50% + 10px);
       }
 
-      .ptr-table {
+      .ptr-summary-grid.single-view .ptr-table {
         min-width: 250px;
+      }
+
+      .ptr-summary-grid.batch-view .ptr-table {
+        min-width: 760px;
       }
     }
   </style>
@@ -788,7 +880,11 @@
 
         <div class="summary-card">
           <div class="section-title">Unique PTR Values by SKU</div>
-          <div id="ptrSummaryGrid" class="ptr-summary-grid"></div>
+          <div class="view-toggle">
+            <button id="singleViewBtn" class="view-btn active">Single SKU View</button>
+            <button id="batchViewBtn" class="view-btn">Batchwise View</button>
+          </div>
+          <div id="ptrSummaryGrid" class="ptr-summary-grid single-view"></div>
         </div>
 
         <div class="charts-grid">
@@ -828,6 +924,7 @@
                   <th>City</th>
                   <th>Brand</th>
                   <th>SKU</th>
+                  <th>Batch</th>
                   <th>Channel</th>
                   <th>Shop</th>
                   <th>MRP</th>
@@ -882,6 +979,7 @@
       shop: "Shop Name",
       mrp: "MRP",
       ptr: "PTR",
+      batch: "Batch",
       scheme: "Any Scheme (Optional)",
       remarks: "Remarks (Optional)",
       frontPhoto: "Front Photo Link",
@@ -895,6 +993,7 @@
     let rawData = [];
     let filteredData = [];
     let currentRotation = 0;
+    let ptrViewMode = "single";
 
     const activeFilters = {
       region: "All",
@@ -986,6 +1085,13 @@
       if (s === "done") return '<span class="badge done">Done</span>';
       if (s === "pending") return '<span class="badge pending">Pending</span>';
       return `<span class="badge other">${safeText(status) || "NA"}</span>`;
+    }
+
+    function normalizeBatch(batchValue) {
+      const b = safeText(batchValue).toLowerCase();
+      if (b === "1" || b === "batch 1" || b === "batch1") return "1";
+      if (b === "2" || b === "batch 2" || b === "batch2") return "2";
+      return safeText(batchValue) || "NA";
     }
 
     function applyFilterSet(data, ignoreKey = null) {
@@ -1118,8 +1224,9 @@
       return `background: rgba(${red}, ${green}, ${blue}, ${alpha}); color:#111827;`;
     }
 
-    function renderPTRSummary(data) {
+    function renderPTRSummarySingle(data) {
       const container = document.getElementById("ptrSummaryGrid");
+      container.className = "ptr-summary-grid single-view";
 
       if (!data.length) {
         container.innerHTML = `<div class="ptr-box"><div class="ptr-head">No Data</div><div class="ptr-table-wrap"><table class="ptr-table"><tbody><tr><td style="padding:8px;">No PTR values available</td></tr></tbody></table></div></div>`;
@@ -1200,6 +1307,205 @@
       }).join("");
     }
 
+    function renderPTRSummaryBatchwise(data) {
+      const container = document.getElementById("ptrSummaryGrid");
+      container.className = "ptr-summary-grid batch-view";
+
+      if (!data.length) {
+        container.innerHTML = `
+          <div class="ptr-box">
+            <div class="ptr-head">No Data</div>
+            <div class="ptr-table-wrap">
+              <table class="ptr-table">
+                <tbody>
+                  <tr><td style="padding:12px;">No PTR values available</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const skuMap = {};
+
+      data.forEach(d => {
+        const sku = safeText(d[fields.sku]) || "NA";
+        const brand = safeText(d[fields.brand]) || "NA";
+        const channel = safeText(d[fields.channel]) || "NA";
+        const batchRaw = normalizeBatch(d[fields.batch]);
+
+        const mrp = toNumber(d[fields.mrp]);
+        const ptr = toNumber(d[fields.ptr]);
+        const marginMRP = getMarginOnMRPPct(mrp, ptr);
+
+        if (!skuMap[sku]) skuMap[sku] = [];
+
+        skuMap[sku].push({
+          sku,
+          brand,
+          channel,
+          batch: batchRaw,
+          mrp,
+          ptr,
+          marginMRP
+        });
+      });
+
+      const allMargins = data
+        .map(d => getMarginOnMRPPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
+        .filter(v => isFinite(v));
+
+      const minMargin = allMargins.length ? Math.min(...allMargins) : 0;
+      const maxMargin = allMargins.length ? Math.max(...allMargins) : 0;
+
+      const sortedSkuKeys = Object.keys(skuMap).sort((a, b) =>
+        a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" })
+      );
+
+      container.innerHTML = sortedSkuKeys.map(sku => {
+        const entries = skuMap[sku];
+        const pairMap = {};
+
+        entries.forEach(item => {
+          const pairKey = `${item.brand}|||${item.channel}`;
+
+          if (!pairMap[pairKey]) {
+            pairMap[pairKey] = {
+              brand: item.brand,
+              channel: item.channel,
+              batch1Rows: [],
+              batch2Rows: []
+            };
+          }
+
+          const rowData = {
+            mrp: item.mrp || null,
+            ptr: item.ptr || null,
+            margin: isFinite(item.marginMRP) ? item.marginMRP : null
+          };
+
+          if (item.batch === "1") pairMap[pairKey].batch1Rows.push(rowData);
+          if (item.batch === "2") pairMap[pairKey].batch2Rows.push(rowData);
+        });
+
+        const finalRows = [];
+
+        Object.values(pairMap).forEach(group => {
+          const maxLen = Math.max(group.batch1Rows.length, group.batch2Rows.length, 1);
+
+          const sortFn = (a, b) => {
+            const am = a.margin ?? 999999;
+            const bm = b.margin ?? 999999;
+            if (am !== bm) return am - bm;
+            const ap = a.ptr ?? 999999;
+            const bp = b.ptr ?? 999999;
+            if (ap !== bp) return ap - bp;
+            const amrp = a.mrp ?? 999999;
+            const bmrp = b.mrp ?? 999999;
+            return amrp - bmrp;
+          };
+
+          group.batch1Rows.sort(sortFn);
+          group.batch2Rows.sort(sortFn);
+
+          for (let i = 0; i < maxLen; i++) {
+            finalRows.push({
+              brand: group.brand,
+              channel: group.channel,
+              batch1: group.batch1Rows[i] || { mrp: null, ptr: null, margin: null },
+              batch2: group.batch2Rows[i] || { mrp: null, ptr: null, margin: null }
+            });
+          }
+        });
+
+        finalRows.sort((a, b) => {
+          if (a.brand !== b.brand) return a.brand.localeCompare(b.brand);
+          if (a.channel !== b.channel) return a.channel.localeCompare(b.channel);
+
+          const aMargin = a.batch1.margin ?? a.batch2.margin ?? 999999;
+          const bMargin = b.batch1.margin ?? b.batch2.margin ?? 999999;
+          if (aMargin !== bMargin) return aMargin - bMargin;
+
+          const aPtr = a.batch1.ptr ?? a.batch2.ptr ?? 999999;
+          const bPtr = b.batch1.ptr ?? b.batch2.ptr ?? 999999;
+          return aPtr - bPtr;
+        });
+
+        const rows = finalRows.map(item => {
+          const b1MarginStyle = item.batch1.margin !== null
+            ? getMarginHeatColor(item.batch1.margin, minMargin, maxMargin)
+            : "background:#f3f4f6;color:#111827;";
+
+          const b2MarginStyle = item.batch2.margin !== null
+            ? getMarginHeatColor(item.batch2.margin, minMargin, maxMargin)
+            : "background:#f3f4f6;color:#111827;";
+
+          return `
+            <tr>
+              <td>${item.brand}</td>
+              <td>${item.channel}</td>
+              <td>${item.batch1.mrp !== null ? formatCompactNumber(item.batch1.mrp) : "NA"}</td>
+              <td>${item.batch2.mrp !== null ? formatCompactNumber(item.batch2.mrp) : "NA"}</td>
+              <td>${item.batch1.ptr !== null ? formatCompactNumber(item.batch1.ptr) : "NA"}</td>
+              <td>${item.batch2.ptr !== null ? formatCompactNumber(item.batch2.ptr) : "NA"}</td>
+              <td>
+                <div class="margin-cell" style="${b1MarginStyle}">
+                  ${item.batch1.margin !== null ? formatPctTwo(item.batch1.margin) : "NA"}
+                </div>
+              </td>
+              <td>
+                <div class="margin-cell" style="${b2MarginStyle}">
+                  ${item.batch2.margin !== null ? formatPctTwo(item.batch2.margin) : "NA"}
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+
+        return `
+          <div class="ptr-box">
+            <div class="ptr-head">${sku}</div>
+            <div class="ptr-table-wrap">
+              <table class="ptr-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Brand</th>
+                    <th rowspan="2">Channel</th>
+                    <th colspan="2">MRP</th>
+                    <th colspan="2">PTR</th>
+                    <th colspan="2">Margin % on MRP</th>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>1</th>
+                    <th>2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rows || `<tr><td colspan="8" style="padding:12px;">No Batch 1 / Batch 2 data available</td></tr>`}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderPTRSummary(data) {
+      if (ptrViewMode === "batch") {
+        renderPTRSummaryBatchwise(data);
+      } else {
+        renderPTRSummarySingle(data);
+      }
+
+      document.getElementById("singleViewBtn").classList.toggle("active", ptrViewMode === "single");
+      document.getElementById("batchViewBtn").classList.toggle("active", ptrViewMode === "batch");
+    }
+
     function aggregateBy(data, keyField, valueFn) {
       const map = {};
       data.forEach(d => {
@@ -1223,7 +1529,7 @@
         text: data.map(d => {
           const mrp = toNumber(d[fields.mrp]);
           const ptr = toNumber(d[fields.ptr]);
-          return `${safeText(d[fields.shop])}<br>${safeText(d[fields.brand])}<br>${safeText(d[fields.sku])}<br>Margin on MRP: ${formatPct(getMarginOnMRPPct(mrp, ptr))}`;
+          return `${safeText(d[fields.shop])}<br>${safeText(d[fields.brand])}<br>${safeText(d[fields.sku])}<br>Batch: ${normalizeBatch(d[fields.batch])}<br>Margin on MRP: ${formatPct(getMarginOnMRPPct(mrp, ptr))}`;
         }),
         marker: {
           size: 11,
@@ -1398,6 +1704,7 @@
             <td>${safeText(d[fields.city]) || "-"}</td>
             <td>${safeText(d[fields.brand])}</td>
             <td>${safeText(d[fields.sku])}</td>
+            <td>${normalizeBatch(d[fields.batch])}</td>
             <td>${safeText(d[fields.channel])}</td>
             <td>${safeText(d[fields.shop])}</td>
             <td>${formatCurrency(mrp)}</td>
@@ -1451,6 +1758,7 @@
         const sku = safeText(d[fields.sku]);
         const flavor = safeText(d[fields.flavor]);
         const channel = safeText(d[fields.channel]);
+        const batchValue = normalizeBatch(d[fields.batch]);
         const scheme = safeText(d[fields.scheme]) || "No";
         const remarks = safeText(d[fields.remarks]) || "No remarks";
         const billWilling = safeText(d[fields.billWilling]) || "-";
@@ -1471,6 +1779,7 @@
                 <div class="meta-item"><i class="fas fa-city"></i><span><strong>City:</strong> ${city || "-"}</span></div>
                 <div class="meta-item"><i class="fas fa-copyright"></i><span><strong>Brand:</strong> ${brand || "-"}</span></div>
                 <div class="meta-item"><i class="fas fa-box"></i><span><strong>SKU:</strong> ${sku || "-"}</span></div>
+                <div class="meta-item"><i class="fas fa-layer-group"></i><span><strong>Batch:</strong> ${batchValue || "-"}</span></div>
                 <div class="meta-item"><i class="fas fa-pepper-hot"></i><span><strong>Flavor:</strong> ${flavor || "-"}</span></div>
                 <div class="meta-item"><i class="fas fa-store"></i><span><strong>Channel:</strong> ${channel || "-"}</span></div>
                 <div class="meta-item"><i class="fas fa-tag"></i><span><strong>MRP:</strong> ${formatCurrency(mrp)}</span></div>
@@ -1604,6 +1913,16 @@
           applyImageRotation();
         }
       }
+    });
+
+    document.getElementById("singleViewBtn").addEventListener("click", function() {
+      ptrViewMode = "single";
+      renderPTRSummary(filteredData);
+    });
+
+    document.getElementById("batchViewBtn").addEventListener("click", function() {
+      ptrViewMode = "batch";
+      renderPTRSummary(filteredData);
     });
 
     loadSheetData();
