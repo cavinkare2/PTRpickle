@@ -280,7 +280,7 @@
     .ptr-summary-grid.single-view {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 6px;
+      gap: 8px;
       align-items: start;
     }
 
@@ -300,6 +300,7 @@
         0 3px 10px rgba(59, 130, 246, 0.05),
         0 0 10px rgba(99, 102, 241, 0.03);
       min-width: 0;
+      overflow: hidden;
     }
 
     .ptr-summary-grid.batch-view .ptr-box {
@@ -323,109 +324,95 @@
     }
 
     .ptr-table-wrap {
-      overflow-x: auto;
       border-radius: 6px;
       border: 1px solid #dbeafe;
       background: white;
+    }
+
+    .ptr-summary-grid.single-view .ptr-table-wrap {
+      overflow: visible;
+    }
+
+    .ptr-summary-grid.batch-view .ptr-table-wrap {
+      overflow-x: auto;
     }
 
     .ptr-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.62rem;
-      min-width: 255px;
-      table-layout: fixed;
+    }
+
+    .ptr-summary-grid.single-view .ptr-table {
+      min-width: 100%;
+      table-layout: auto;
     }
 
     .ptr-summary-grid.batch-view .ptr-table {
       font-size: 0.76rem;
-      min-width: 900px;
+      min-width: 1050px;
       table-layout: auto;
     }
 
     .ptr-table th {
       background: #e9efff;
       color: #312e81;
-      padding: 3px 3px;
+      padding: 4px 4px;
       text-align: center;
       border-bottom: 1px solid #dbeafe;
       font-weight: 800;
-      white-space: nowrap;
-      line-height: 1.05;
+      line-height: 1.1;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .ptr-summary-grid.batch-view .ptr-table th {
       padding: 7px 6px;
       border-right: 1px solid #dbeafe;
       line-height: 1.15;
+      white-space: nowrap;
     }
 
     .ptr-table td {
-      padding: 2px 3px;
+      padding: 4px 4px;
       border-bottom: 1px solid #eef2ff;
       color: #374151;
-      white-space: nowrap;
-      line-height: 1.05;
+      line-height: 1.15;
       text-align: center;
       vertical-align: middle;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: normal;
+      word-break: break-word;
     }
 
     .ptr-summary-grid.batch-view .ptr-table td {
       padding: 7px 6px;
       border-right: 1px solid #eef2ff;
       line-height: 1.15;
-      overflow: visible;
-      text-overflow: clip;
+      white-space: nowrap;
+      word-break: normal;
     }
 
     .ptr-table tbody tr:hover {
       background: #f8fbff;
     }
 
-    .ptr-summary-grid.single-view .ptr-table th:nth-child(1),
-    .ptr-summary-grid.single-view .ptr-table td:nth-child(1) {
-      width: 34px;
-    }
-
-    .ptr-summary-grid.single-view .ptr-table th:nth-child(2),
-    .ptr-summary-grid.single-view .ptr-table td:nth-child(2) {
-      width: 34px;
-    }
-
-    .ptr-summary-grid.single-view .ptr-table th:nth-child(3),
-    .ptr-summary-grid.single-view .ptr-table td:nth-child(3) {
-      width: 52px;
-    }
-
-    .ptr-summary-grid.single-view .ptr-table th:nth-child(4),
-    .ptr-summary-grid.single-view .ptr-table td:nth-child(4) {
-      width: 42px;
-    }
-
-    .ptr-summary-grid.single-view .ptr-table th:nth-child(5),
-    .ptr-summary-grid.single-view .ptr-table td:nth-child(5) {
-      width: 62px;
-    }
-
-    .ptr-summary-grid.batch-view .ptr-table th[rowspan="2"] {
-      vertical-align: middle;
-    }
-
     .margin-cell {
       display: inline-block;
-      width: 56px;
-      min-width: 56px;
-      max-width: 56px;
+      min-width: 64px;
       font-weight: 800;
       border-radius: 3px;
       text-align: center;
-      padding: 2px 2px !important;
+      padding: 2px 4px !important;
       font-size: 0.58rem;
-      line-height: 1;
-      overflow: hidden;
+      line-height: 1.1;
       color: #111827 !important;
+    }
+
+    .ptr-summary-grid.single-view .margin-cell {
+      width: 100%;
+      min-width: unset;
+      max-width: unset;
+      font-size: 0.6rem;
     }
 
     .ptr-summary-grid.batch-view .margin-cell {
@@ -815,11 +802,11 @@
       }
 
       .ptr-summary-grid.single-view .ptr-table {
-        min-width: 250px;
+        font-size: 0.58rem;
       }
 
       .ptr-summary-grid.batch-view .ptr-table {
-        min-width: 760px;
+        min-width: 920px;
       }
     }
   </style>
@@ -854,8 +841,8 @@
               <div id="channelChips" class="chips"></div>
             </div>
             <div class="filter-col">
-              <div class="chip-label">Status</div>
-              <div id="statusChips" class="chips"></div>
+              <div class="chip-label">Flavor</div>
+              <div id="flavorChips" class="chips"></div>
             </div>
           </div>
         </div>
@@ -893,12 +880,12 @@
             <div id="scatterChart" class="chart"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Brand Avg Margin % on MRP</div>
-            <div id="brandMarginMRPChart" class="chart"></div>
+            <div class="chart-title">PTR % vs Margin % on MRP</div>
+            <div id="ptrMarginRelationChart" class="chart"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">Channel Split</div>
-            <div id="channelChart" class="chart"></div>
+            <div class="chart-title">Margin % on MRP Distribution</div>
+            <div id="marginDistributionChart" class="chart"></div>
           </div>
           <div class="chart-card">
             <div class="chart-title">Region Avg Margin % on MRP</div>
@@ -923,6 +910,7 @@
                   <th>Region</th>
                   <th>City</th>
                   <th>Brand</th>
+                  <th>Flavor</th>
                   <th>SKU</th>
                   <th>Batch</th>
                   <th>Channel</th>
@@ -1000,7 +988,7 @@
       brand: "All",
       sku: "All",
       channel: "All",
-      status: "All"
+      flavor: "All"
     };
 
     function safeText(v) {
@@ -1100,8 +1088,8 @@
         const brandOk = ignoreKey === "brand" || activeFilters.brand === "All" || safeText(row[fields.brand]) === activeFilters.brand;
         const skuOk = ignoreKey === "sku" || activeFilters.sku === "All" || safeText(row[fields.sku]) === activeFilters.sku;
         const channelOk = ignoreKey === "channel" || activeFilters.channel === "All" || safeText(row[fields.channel]) === activeFilters.channel;
-        const statusOk = ignoreKey === "status" || activeFilters.status === "All" || safeText(row[fields.status]) === activeFilters.status;
-        return regionOk && brandOk && skuOk && channelOk && statusOk;
+        const flavorOk = ignoreKey === "flavor" || activeFilters.flavor === "All" || safeText(row[fields.flavor]) === activeFilters.flavor;
+        return regionOk && brandOk && skuOk && channelOk && flavorOk;
       });
     }
 
@@ -1113,7 +1101,7 @@
       if (filterKey === "brand") arr = base.map(d => d[fields.brand]);
       if (filterKey === "sku") arr = base.map(d => d[fields.sku]);
       if (filterKey === "channel") arr = base.map(d => d[fields.channel]);
-      if (filterKey === "status") arr = base.map(d => d[fields.status]);
+      if (filterKey === "flavor") arr = base.map(d => d[fields.flavor]);
 
       return uniqueSorted(arr);
     }
@@ -1138,11 +1126,11 @@
       renderChips("brandChips", getAvailableValues("brand"), "brand");
       renderChips("skuChips", getAvailableValues("sku"), "sku");
       renderChips("channelChips", getAvailableValues("channel"), "channel");
-      renderChips("statusChips", getAvailableValues("status"), "status");
+      renderChips("flavorChips", getAvailableValues("flavor"), "flavor");
     }
 
     function cleanInvalidSelections() {
-      ["region", "brand", "sku", "channel", "status"].forEach(key => {
+      ["region", "brand", "sku", "channel", "flavor"].forEach(key => {
         const allowed = getAvailableValues(key);
         if (!allowed.includes(activeFilters[key])) {
           activeFilters[key] = "All";
@@ -1240,6 +1228,7 @@
         const mrp = toNumber(d[fields.mrp]);
         const ptr = toNumber(d[fields.ptr]);
         const brand = safeText(d[fields.brand]) || "NA";
+        const flavor = safeText(d[fields.flavor]) || "NA";
         const channel = safeText(d[fields.channel]) || "NA";
         const marginMRP = getMarginOnMRPPct(mrp, ptr);
 
@@ -1251,6 +1240,7 @@
           mrp,
           ptr,
           brand,
+          flavor,
           channel,
           marginMRP
         });
@@ -1273,6 +1263,7 @@
               <td>${formatCompactNumber(item.mrp)}</td>
               <td>${formatCompactNumber(item.ptr)}</td>
               <td title="${item.brand}">${item.brand}</td>
+              <td title="${item.flavor}">${item.flavor}</td>
               <td title="${item.channel}">${item.channel}</td>
               <td>
                 <div class="margin-cell" style="${heatStyle}">
@@ -1293,6 +1284,7 @@
                     <th>MRP</th>
                     <th>PTR</th>
                     <th>Brand</th>
+                    <th>Flavor</th>
                     <th>Channel</th>
                     <th>Margin % on MRP</th>
                   </tr>
@@ -1332,6 +1324,7 @@
       data.forEach(d => {
         const sku = safeText(d[fields.sku]) || "NA";
         const brand = safeText(d[fields.brand]) || "NA";
+        const flavor = safeText(d[fields.flavor]) || "NA";
         const channel = safeText(d[fields.channel]) || "NA";
         const batchRaw = normalizeBatch(d[fields.batch]);
 
@@ -1344,6 +1337,7 @@
         skuMap[sku].push({
           sku,
           brand,
+          flavor,
           channel,
           batch: batchRaw,
           mrp,
@@ -1368,11 +1362,12 @@
         const pairMap = {};
 
         entries.forEach(item => {
-          const pairKey = `${item.brand}|||${item.channel}`;
+          const pairKey = `${item.brand}|||${item.flavor}|||${item.channel}`;
 
           if (!pairMap[pairKey]) {
             pairMap[pairKey] = {
               brand: item.brand,
+              flavor: item.flavor,
               channel: item.channel,
               batch1Rows: [],
               batch2Rows: []
@@ -1412,6 +1407,7 @@
           for (let i = 0; i < maxLen; i++) {
             finalRows.push({
               brand: group.brand,
+              flavor: group.flavor,
               channel: group.channel,
               batch1: group.batch1Rows[i] || { mrp: null, ptr: null, margin: null },
               batch2: group.batch2Rows[i] || { mrp: null, ptr: null, margin: null }
@@ -1421,6 +1417,7 @@
 
         finalRows.sort((a, b) => {
           if (a.brand !== b.brand) return a.brand.localeCompare(b.brand);
+          if (a.flavor !== b.flavor) return a.flavor.localeCompare(b.flavor);
           if (a.channel !== b.channel) return a.channel.localeCompare(b.channel);
 
           const aMargin = a.batch1.margin ?? a.batch2.margin ?? 999999;
@@ -1444,6 +1441,7 @@
           return `
             <tr>
               <td>${item.brand}</td>
+              <td>${item.flavor}</td>
               <td>${item.channel}</td>
               <td>${item.batch1.mrp !== null ? formatCompactNumber(item.batch1.mrp) : "NA"}</td>
               <td>${item.batch2.mrp !== null ? formatCompactNumber(item.batch2.mrp) : "NA"}</td>
@@ -1471,6 +1469,7 @@
                 <thead>
                   <tr>
                     <th rowspan="2">Brand</th>
+                    <th rowspan="2">Flavor</th>
                     <th rowspan="2">Channel</th>
                     <th colspan="2">MRP</th>
                     <th colspan="2">PTR</th>
@@ -1486,7 +1485,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  ${rows || `<tr><td colspan="8" style="padding:12px;">No Batch 1 / Batch 2 data available</td></tr>`}
+                  ${rows || `<tr><td colspan="9" style="padding:12px;">No Batch 1 / Batch 2 data available</td></tr>`}
                 </tbody>
               </table>
             </div>
@@ -1529,7 +1528,7 @@
         text: data.map(d => {
           const mrp = toNumber(d[fields.mrp]);
           const ptr = toNumber(d[fields.ptr]);
-          return `${safeText(d[fields.shop])}<br>${safeText(d[fields.brand])}<br>${safeText(d[fields.sku])}<br>Batch: ${normalizeBatch(d[fields.batch])}<br>Margin on MRP: ${formatPct(getMarginOnMRPPct(mrp, ptr))}`;
+          return `${safeText(d[fields.shop])}<br>${safeText(d[fields.brand])}<br>${safeText(d[fields.flavor])}<br>${safeText(d[fields.sku])}<br>Batch: ${normalizeBatch(d[fields.batch])}<br>Margin on MRP: ${formatPct(getMarginOnMRPPct(mrp, ptr))}`;
         }),
         marker: {
           size: 11,
@@ -1557,62 +1556,83 @@
       }, { responsive: true, displayModeBar: false });
     }
 
-    function renderBrandMarginMRPChart(data) {
-      const agg = aggregateBy(data, fields.brand, d => getMarginOnMRPPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
-        .sort((a,b) => b.value - a.value);
+    function renderPTRMarginRelationChart(data) {
+      const chartData = data.map(d => {
+        const mrp = toNumber(d[fields.mrp]);
+        const ptr = toNumber(d[fields.ptr]);
+        return {
+          ptrPct: getPTRPct(mrp, ptr),
+          marginPct: getMarginOnMRPPct(mrp, ptr),
+          text: `${safeText(d[fields.brand])}<br>${safeText(d[fields.flavor])}<br>${safeText(d[fields.sku])}<br>MRP: ${formatCurrency(mrp)}<br>PTR: ${formatCurrency(ptr)}`
+        };
+      }).filter(d => isFinite(d.ptrPct) && isFinite(d.marginPct));
 
-      Plotly.newPlot("brandMarginMRPChart", [{
-        x: agg.map(d => d.key),
-        y: agg.map(d => d.value),
-        type: "bar",
+      Plotly.newPlot("ptrMarginRelationChart", [{
+        x: chartData.map(d => d.ptrPct),
+        y: chartData.map(d => d.marginPct),
+        mode: "markers",
+        type: "scatter",
+        text: chartData.map(d => d.text),
         marker: {
-          color: "rgba(99,102,241,0.85)",
-          line: { color: "rgba(59,130,246,1)", width: 1.2 }
+          size: 10,
+          opacity: 0.8,
+          color: "rgba(99,102,241,0.82)",
+          line: {
+            color: "rgba(37,99,235,1)",
+            width: 1.2
+          }
         },
-        hovertemplate: "%{x}<br>Avg Margin on MRP: %{y:.1f}%<extra></extra>"
+        hovertemplate: "%{text}<br>PTR %: %{x:.1f}%<br>Margin % on MRP: %{y:.1f}%<extra></extra>"
       }], {
         ...getChartLayout(),
-        margin: { l: 48, r: 12, t: 18, b: 90 },
+        margin: { l: 48, r: 12, t: 18, b: 45 },
         xaxis: {
-          tickangle: -25,
-          gridcolor: "rgba(99,102,241,0.08)"
+          title: "PTR % of MRP",
+          range: [0, 100],
+          gridcolor: "rgba(99,102,241,0.10)"
         },
-        yaxis: { title: "Margin % on MRP", gridcolor: "rgba(99,102,241,0.10)" }
+        yaxis: {
+          title: "Margin % on MRP",
+          range: [0, 100],
+          gridcolor: "rgba(99,102,241,0.10)"
+        }
       }, { responsive: true, displayModeBar: false });
     }
 
-    function renderChannelChart(data) {
-      const map = {};
-      data.forEach(d => {
-        const key = safeText(d[fields.channel]) || "NA";
-        map[key] = (map[key] || 0) + 1;
-      });
+    function renderMarginDistributionChart(data) {
+      const margins = data
+        .map(d => getMarginOnMRPPct(toNumber(d[fields.mrp]), toNumber(d[fields.ptr])))
+        .filter(v => isFinite(v) && v >= 0 && v <= 100);
 
-      Plotly.newPlot("channelChart", [{
-        labels: Object.keys(map),
-        values: Object.values(map),
-        type: "pie",
-        hole: 0.48,
-        textinfo: "percent+label",
-        marker: {
-          colors: [
-            "#4f46e5",
-            "#2563eb",
-            "#7c3aed",
-            "#06b6d4",
-            "#8b5cf6",
-            "#14b8a6",
-            "#3b82f6"
-          ],
-          line: { color: "rgba(255,255,255,0.95)", width: 2 }
+      Plotly.newPlot("marginDistributionChart", [{
+        x: margins,
+        type: "histogram",
+        xbins: {
+          start: 0,
+          end: 100,
+          size: 5
         },
-        pull: 0.03,
-        hovertemplate: "%{label}<br>Count: %{value}<br>%{percent}<extra></extra>"
+        marker: {
+          color: "rgba(79,70,229,0.82)",
+          line: {
+            color: "rgba(37,99,235,1)",
+            width: 1
+          }
+        },
+        hovertemplate: "Margin Range: %{x}<br>Count: %{y}<extra></extra>"
       }], {
-        margin: { l: 10, r: 10, t: 10, b: 10 },
-        paper_bgcolor: "rgba(0,0,0,0)",
-        font: { family: "Segoe UI, Tahoma, sans-serif", color: "#1f2937" },
-        showlegend: false
+        ...getChartLayout(),
+        margin: { l: 48, r: 12, t: 18, b: 50 },
+        xaxis: {
+          title: "Margin % on MRP",
+          range: [0, 100],
+          dtick: 10,
+          gridcolor: "rgba(99,102,241,0.08)"
+        },
+        yaxis: {
+          title: "Number of Records",
+          gridcolor: "rgba(99,102,241,0.10)"
+        }
       }, { responsive: true, displayModeBar: false });
     }
 
@@ -1656,6 +1676,7 @@
         margin: { l: 120, r: 12, t: 18, b: 35 },
         yaxis: {
           autorange: "reversed",
+          type: "category",
           gridcolor: "rgba(99,102,241,0.08)"
         },
         xaxis: { title: "Margin % on MRP", gridcolor: "rgba(99,102,241,0.10)" }
@@ -1686,6 +1707,7 @@
         margin: { l: 120, r: 12, t: 18, b: 35 },
         yaxis: {
           autorange: "reversed",
+          type: "category",
           gridcolor: "rgba(99,102,241,0.08)"
         },
         xaxis: { title: "Margin % on MRP", gridcolor: "rgba(99,102,241,0.10)" }
@@ -1703,6 +1725,7 @@
             <td>${safeText(d[fields.region])}</td>
             <td>${safeText(d[fields.city]) || "-"}</td>
             <td>${safeText(d[fields.brand])}</td>
+            <td>${safeText(d[fields.flavor]) || "-"}</td>
             <td>${safeText(d[fields.sku])}</td>
             <td>${normalizeBatch(d[fields.batch])}</td>
             <td>${safeText(d[fields.channel])}</td>
@@ -1823,8 +1846,8 @@
       renderKPIs(data);
       renderPTRSummary(data);
       renderScatterChart(data);
-      renderBrandMarginMRPChart(data);
-      renderChannelChart(data);
+      renderPTRMarginRelationChart(data);
+      renderMarginDistributionChart(data);
       renderRegionMarginMRPChart(data);
       renderSkuMarginMRPChart(data);
       renderFlavorMarginMRPChart(data);
